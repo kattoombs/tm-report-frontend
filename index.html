@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T&M Report - A&J California Builders</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #140409 0%, #2a1a1f 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            padding: 30px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #A27339;
+        }
+
+        .header-logo {
+            width: 120px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        .header h1 {
+            color: #140409;
+            font-size: 24px;
+            margin-bottom: 3px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #A27339;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .section-title {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 20px 0 12px 0;
+            font-weight: 600;
+            color: #140409;
+            border-left: 4px solid #A27339;
+            font-size: 15px;
+        }
+
+        .material-item,
+        .equipment-item {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .material-row {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .equipment-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-add {
+            background: #4CAF50;
+            color: white;
+            margin-top: 10px;
+        }
+
+        .btn-add:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .btn-remove {
+            background: #f44336;
+            color: white;
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        .btn-remove:hover {
+            background: #da190b;
+        }
+
+        .btn-submit {
+            background: #140409;
+            color: white;
+            width: 100%;
+            font-size: 18px;
+            margin-top: 20px;
+            padding: 14px;
+            border: 2px solid #A27339;
+        }
+
+        .btn-submit:hover {
+            background: #A27339;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(162, 115, 57, 0.3);
+        }
+
+        .signature-pad {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: crosshair;
+            display: block;
+            margin: 10px 0;
+            touch-action: none;
+        }
+
+        .signature-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .photo-upload {
+            margin-top: 10px;
+        }
+
+        .photo-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .photo-preview img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .success-message {
+            background: #4CAF50;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .info-box {
+            background: #2a1a1f;
+            border-left: 4px solid #A27339;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+
+        .info-box p {
+            color: #A27339;
+            margin: 0;
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            .row {
+                grid-template-columns: 1fr;
+            }
+
+            .material-row {
+                grid-template-columns: 1fr;
+            }
+
+            .equipment-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .required {
+            color: #f44336;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <!-- Add your logo file when deploying: place CBlogo_transparent_backgrd_1000x1000px.png in same folder -->
+            <img src="CBlogo_transparent_backgrd_1000x1000px.png" alt="California Builders Logo" class="header-logo" onerror="this.style.display='none'">
+            <h1>Time & Material Report</h1>
+            <p>California Builders, Inc.</p>
+        </div>
+
+        <div class="info-box">
+            <p><strong>Note:</strong> Fill out all field information. The office will add dollar amounts when processing.</p>
+        </div>
+
+        <form id="tmForm">
+            <!-- Basic Info - Compact Layout -->
+            <div class="row">
+                <div class="form-group">
+                    <label>Date <span class="required">*</span></label>
+                    <input type="date" id="date" required>
+                </div>
+                <div class="form-group">
+                    <label>Job Number <span class="required">*</span></label>
+                    <select id="jobNumber" required onchange="updateJobInfo()">
+                    <option value="">Select Job Number</option>
+                    <option value="2405 - 605 Cambridge">2405 - 605 Cambridge</option>
+                    <option value="2415 - Shaw L.O.A.P">2415 - Shaw L.O.A.P</option>
+                    <option value="2417 - Hilldale Classrooms">2417 - Hilldale Classrooms</option>
+                    <option value="2421 - 987 Schiele Avenue">2421 - 987 Schiele Avenue</option>
+                    <option value="2422 - 1069 Franquette">2422 - 1069 Franquette</option>
+                    <option value="2424 - 21459 Saratoga Hills">2424 - 21459 Saratoga Hills</option>
+                    <option value="2429 - 174 Harold Ave">2429 - 174 Harold Ave</option>
+                    <option value="2433 - 25503 Industrial">2433 - 25503 Industrial</option>
+                    <option value="2434 - 11 Athlone">2434 - 11 Athlone</option>
+                    <option value="2439 - Saratoga -Sunnyvale">2439 - Saratoga -Sunnyvale</option>
+                    <option value="2440 - 10600 N. De Anza">2440 - 10600 N. De Anza</option>
+                    <option value="2441 - Safeway SF">2441 - Safeway SF</option>
+                    <option value="2442 - Chaucer Street">2442 - Chaucer Street</option>
+                    <option value="2501 - Safeway S SF">2501 - Safeway S SF</option>
+                    <option value="2503 - Hilldale School">2503 - Hilldale School</option>
+                    <option value="2504 - Main Street">2504 - Main Street</option>
+                    <option value="2506 - Yang Renovation">2506 - Yang Renovation</option>
+                    <option value="2507 - N. Mc Carthy">2507 - N. Mc Carthy</option>
+                    <option value="2508 - Castro Station">2508 - Castro Station</option>
+                    <option value="2509 - Saratoga Window Job">2509 - Saratoga Window Job</option>
+                    <option value="2510 - Greenfield">2510 - Greenfield</option>
+                    <option value="2511 - Excite Curtner">2511 - Excite Curtner</option>
+                    <option value="2512 - Rosita Avenue">2512 - Rosita Avenue</option>
+                    <option value="2513 - Wisteria Way">2513 - Wisteria Way</option>
+                    <option value="2514 - Everette Ave.">2514 - Everette Ave.</option>
+                    <option value="2517 - Gordon Avenue">2517 - Gordon Avenue</option>
+                    <option value="2518 - Oakmead Pkwy">2518 - Oakmead Pkwy</option>
+                    <option value="2519 - Menlo School">2519 - Menlo School</option>
+                    <option value="2521 - Roof Rafter Project">2521 - Roof Rafter Project</option>
+                    <option value="2522 - St. Timothys">2522 - St. Timothys</option>
+                    <option value="2523 - 2394 Lansford">2523 - 2394 Lansford</option>
+                    <option value="2524 - Northwind Square">2524 - Northwind Square</option>
+                    <option value="2525 - Tasman">2525 - Tasman</option>
+                    <option value="2526 - Fair Oaks-Garage">2526 - Fair Oaks-Garage</option>
+                    <option value="2527 - Fremont Swim House">2527 - Fremont Swim House</option>
+                    <option value="2528 - 1252 Hillcrest">2528 - 1252 Hillcrest</option>
+                    <option value="2529 - N. Canyon Bldg">2529 - N. Canyon Bldg</option>
+                    <option value="2530 - Shaw Refresh">2530 - Shaw Refresh</option>
+                    <option value="2531">2531</option>
+                </select>
+            </div>
+            </div>
+
+            <div class="form-group">
+                <label>General Contractor <span class="required">*</span> <span style="font-size: 12px; color: #A27339;">(Auto-filled)</span></label>
+                <input type="text" id="generalContractor" required readonly style="background-color: #f9f9f9;">
+            </div>
+
+            <div class="form-group">
+                <label>Project Address <span class="required">*</span> <span style="font-size: 12px; color: #A27339;">(Auto-filled)</span></label>
+                <input type="text" id="projectAddress" required readonly style="background-color: #f9f9f9;">
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <label>Number of Men <span class="required">*</span></label>
+                    <input type="number" id="numMen" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label>Total Hours <span class="required">*</span></label>
+                    <input type="number" id="totalHours" min="0.5" step="0.5" required>
+                </div>
+            </div>
+
+            <!-- Work Description -->
+            <div class="form-group">
+                <label>Work Description <span class="required">*</span></label>
+                <textarea id="workDescription" required placeholder="Describe the work performed..." style="min-height: 150px;"></textarea>
+            </div>
+
+            <!-- Equipment Section -->
+            <div class="section-title">Equipment Usage</div>
+            <div id="equipmentContainer"></div>
+            <button type="button" class="btn btn-add" onclick="addEquipment()">+ Add Equipment</button>
+
+            <!-- Materials Section -->
+            <div class="section-title">Materials Needed</div>
+            <div id="materialsContainer"></div>
+            <button type="button" class="btn btn-add" onclick="addMaterial()">+ Add Material</button>
+
+            <!-- Photos -->
+            <div class="section-title">Photos (Optional)</div>
+            <div class="form-group">
+                <input type="file" id="photos" accept="image/*" multiple class="photo-upload">
+                <div class="photo-preview" id="photoPreview"></div>
+            </div>
+
+            <!-- Foreman Info -->
+            <div class="section-title">Foreman Information</div>
+            <div class="form-group">
+                <label>Foreman Name <span class="required">*</span></label>
+                <input type="text" id="foremanName" required>
+            </div>
+
+            <div class="form-group">
+                <label>Foreman Signature <span class="required">*</span></label>
+                <canvas id="signaturePad" class="signature-pad" width="600" height="150"></canvas>
+                <div class="signature-controls">
+                    <button type="button" class="btn btn-remove" onclick="clearSignature()">Clear Signature</button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-submit">Submit T&M Report</button>
+        </form>
+
+        <div class="success-message" id="successMessage">
+            <h2>✓ Report Submitted Successfully!</h2>
+            <p>Your T&M report has been sent to the office.</p>
+        </div>
+    </div>
+
+    <script>
+        // Complete job data - auto-populates GC, GC Address, and Project Address
+        const jobData = {
+            "2405": { name: "605 Cambridge", gc: "Citadel, Inc", projectAddress: "855 El Camino Real, Palo Alto, CA 94301" },
+            "2415": { name: "Shaw L.O.A.P", gc: "OPI Commercial Builders", projectAddress: "212&214 Shaw, San Francisco, CA 94080" },
+            "2417": { name: "Hilldale Classrooms", gc: "LWG Construction", projectAddress: "79 Florence St, Daly City, CA 94014" },
+            "2421": { name: "987 Schiele Avenue", gc: "A&J California Builders", projectAddress: "987 Schiele Avenue, San Jose, CA 95126" },
+            "2422": { name: "1069 Franquette", gc: "Brooke Shaw Builders", projectAddress: "1069 Franquette, San Jose, CA 95125" },
+            "2424": { name: "21459 Saratoga Hills", gc: "Steve Casaccia", projectAddress: "21459 Saratoga Hills, Saratoga, CA 95070" },
+            "2429": { name: "174 Harold Ave", gc: "Brooke Shaw Builder", projectAddress: "174 Harold Ave, Santa Clara, CA 95050" },
+            "2433": { name: "25503 Industrial", gc: "Bruce Boyd Construction", projectAddress: "25503 Industrial, Hayward, CA 94545" },
+            "2434": { name: "11 Athlone", gc: "A&J California Builders", projectAddress: "11 Athlone, Menlo Park, CA 94025" },
+            "2439": { name: "Saratoga-Sunnyvale", gc: "South Bay Construction", projectAddress: "12200 Saratoga-Sunnyvale, Saratoga, CA 95070" },
+            "2440": { name: "10600 N. De Anza", gc: "South Bay Construction", projectAddress: "10600 N. De Anza Blvd, Cupertino, CA 95014" },
+            "2441": { name: "Safeway SF", gc: "Lusardi Construction", projectAddress: "190 El Camino Real, San Francisco, CA 94080" },
+            "2442": { name: "Chaucer Street", gc: "RL Brackett Construction", projectAddress: "570 Chaucer St, Palo Alto, CA 94301" },
+            "2501": { name: "Safeway S SF", gc: "Lusardi Construction", projectAddress: "190 El Camino, S. San Francisco, CA 94080" },
+            "2503": { name: "Hilldale School", gc: "LWG Construction, Inc.", projectAddress: "79 Florence Ave, Daly City, CA 94014" },
+            "2504": { name: "Main Street", gc: "South Bay Construction, Inc.", projectAddress: "1180 Main Street, Redwood City, CA 94063" },
+            "2506": { name: "Yang Renovation", gc: "A&J California Builders, Inc.", projectAddress: "1050 Lily Ave, Sunnyvale, CA 94089" },
+            "2507": { name: "N. McCarthy", gc: "OPI Commercial Builders", projectAddress: "680 N McCarthy Blvd, Milpitas, CA 95054" },
+            "2508": { name: "Castro Station", gc: "OPI Commercial Builders", projectAddress: "200 Evelyn Ave, Mountain View, CA 94041" },
+            "2509": { name: "Saratoga Window Job", gc: "Steve Casaccia", projectAddress: "21459 Saratoga Hills, Saratoga, CA 95070" },
+            "2510": { name: "Greenfield", gc: "The James Group", projectAddress: "6502 Greenfield Dr, Gilroy, CA 95020" },
+            "2511": { name: "Excite Curtner", gc: "Tico Construction", projectAddress: "265 Curtner Avenue, San Jose, CA 95125" },
+            "2512": { name: "Rosita Avenue", gc: "A&J California Builders", projectAddress: "2226 Rosita Ave, Santa Clara, CA 95050" },
+            "2513": { name: "Wisteria Way", gc: "Brooke Shaw", projectAddress: "6720 Wisteria, San Jose, CA 95129" },
+            "2514": { name: "Everette Ave.", gc: "Brooke Shaw", projectAddress: "1655 Everette Ave., San Jose, CA 95125" },
+            "2517": { name: "Gordon Avenue", gc: "Center-Line Construction, Inc.", projectAddress: "2171 Gordon Ave, Menlo Park, CA 94025" },
+            "2518": { name: "Oakmead Pkwy", gc: "South Bay Construction", projectAddress: "350 Oakmead Parkway, Sunnyvale, CA 94085" },
+            "2519": { name: "Menlo School", gc: "South Bay Construction", projectAddress: "50 Varapariso, Atherton, CA 94207" },
+            "2521": { name: "Roof Rafter Project", gc: "C&J Contracting, Inc.", projectAddress: "3111 Coronado Dr, Santa Clara, CA 95054" },
+            "2522": { name: "St. Timothys", gc: "Evolution Construction", projectAddress: "5100 Camden Ave, San Jose, CA 95124" },
+            "2523": { name: "2394 Lansford", gc: "Brooke Shaw Builder", projectAddress: "2394 Lansford Ave, San Jose, CA 95125" },
+            "2524": { name: "Northwind Square", gc: "Larry and Jeane Hirsh", projectAddress: "20024 Northwind Sq., Cupertino, CA 95014" },
+            "2525": { name: "Tasman", gc: "South Bay Construction", projectAddress: "3001 Tasman, Santa Clara, CA" },
+            "2526": { name: "Fair Oaks-Garage", gc: "Center-Line Construction", projectAddress: "163 Fair Oaks, Atherton, CA 94027" },
+            "2527": { name: "Fremont Swim House", gc: "South Bay Construction", projectAddress: "34075 Fremont Blvd., Fremont, CA 94555" },
+            "2528": { name: "1252 Hillcrest", gc: "RL Brackett", projectAddress: "1252 Hillcrest, San Jose, CA 95120" },
+            "2529": { name: "N. Canyon Bldg", gc: "South Bay Construction", projectAddress: "477 N. Canyons Pkway, Livermore, CA 94551" },
+            "2530": { name: "Shaw Refresh", gc: "C&J Contracting", projectAddress: "340 Shaw Rd, S. San Francisco, CA 94080" },
+            "2531": { name: "Rogers Roof Repair", gc: "Valley Design", projectAddress: "Rubarb LLC, San Jose, CA 95112" }
+        };
+
+        // GC Address mapping (updated with all GCs from job list)
+        const gcAddresses = {
+            "A&J California Builders": "1261 Lincoln Avenue, Suite 106, San José, CA 95125",
+            "A&J California Builders, Inc.": "1261 Lincoln Avenue, Suite 106, San José, CA 95125",
+            "Brooke Shaw Builder": "2324 Shibley Ave., San Jose, CA 95125",
+            "Brooke Shaw Builders": "2324 Shibley Ave., San Jose, CA 95125",
+            "Brooke Shaw": "2324 Shibley Ave., San Jose, CA 95125",
+            "South Bay Construction": "1171 Homestead Road, #205, Santa Clara, CA 95050",
+            "South Bay Construction, Inc.": "1171 Homestead Road, #205, Santa Clara, CA 95050",
+            "OPI Commercial Builders": "1401 N. Shoreline Blvd., Mountain View, CA 94043",
+            "Lusardi Construction": "890 Cowan Road, Burlingame, CA 94010",
+            "RL Brackett Construction": "1080 Linda Vista Ave, Mountain View, CA 94043",
+            "RL Brackett": "1080 Linda Vista Ave, Mountain View, CA 94043",
+            "LWG Construction": "456 Gellert Boulevard, Daly City, CA 94015",
+            "LWG Construction, Inc.": "456 Gellert Boulevard, Daly City, CA 94015",
+            "Steve Casaccia": "14230 Blossom Hill Rd., Los Gatos, CA 95032",
+            "Bruce Boyd Construction": "P.O. Box 5342, San Jose, CA 95150",
+            "Citadel, Inc": "2350 Mission College Blvd., Suite 1010, Santa Clara, CA 95054",
+            "Suner Corp": "1074 S. De Anza Blvd., San Jose, CA 95129",
+            "Tico Construction": "460 Lincoln Avenue, San Jose, CA 95126",
+            "Center-Line Construction, Inc.": "3130 Alpine Road, Suite 200, Portola Valley, CA 94028",
+            "Center-Line Construction": "3130 Alpine Road, Suite 200, Portola Valley, CA 94028",
+            "C&J Contracting, Inc.": "2880 Zanker Road, San Jose, CA 95134",
+            "C&J Contracting": "2880 Zanker Road, San Jose, CA 95134",
+            "Evolution Construction": "1234 Oakland Road, San Jose, CA 95112",
+            "Larry and Jeane Hirsh": "Private Owner",
+            "Valley Design": "780 Montague Expressway, Suite 106, San Jose, CA 95131",
+            "The James Group": "7436 Monterey Street, Gilroy, CA 95020"
+        };
+
+        // Auto-populate everything when job number is selected
+        function updateJobInfo() {
+            const jobSelect = document.getElementById('jobNumber');
+            const jobValue = jobSelect.value;
+            
+            if (!jobValue) return;
+            
+            // Extract job number (e.g., "2405" from "2405 - 605 Cambridge")
+            const jobNum = jobValue.split(' - ')[0];
+            const job = jobData[jobNum];
+            
+            if (job) {
+                // Auto-fill GC
+                document.getElementById('generalContractor').value = job.gc;
+                
+                // Auto-fill project address
+                document.getElementById('projectAddress').value = job.projectAddress;
+                
+                // Store GC address for backend
+                window.currentGCAddress = gcAddresses[job.gc] || '';
+                
+                console.log(`Auto-populated: ${job.name}`);
+                console.log(`GC: ${job.gc}`);
+                console.log(`Project Address: ${job.projectAddress}`);
+            }
+        }
+
+        function updateGCAddress() {
+            const gc = document.getElementById('generalContractor').value;
+            // Store the address in a hidden way for later use
+            window.currentGCAddress = gcAddresses[gc] || '';
+        }
+
+        // Set today's date as default
+        document.getElementById('date').valueAsDate = new Date();
+
+        // Signature Pad Setup
+        const canvas = document.getElementById('signaturePad');
+        const ctx = canvas.getContext('2d');
+        let isDrawing = false;
+        let hasSignature = false;
+
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+        canvas.addEventListener('touchstart', handleTouch);
+        canvas.addEventListener('touchmove', handleTouch);
+        canvas.addEventListener('touchend', stopDrawing);
+
+        function startDrawing(e) {
+            isDrawing = true;
+            hasSignature = true;
+            const rect = canvas.getBoundingClientRect();
+            ctx.beginPath();
+            ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            const rect = canvas.getBoundingClientRect();
+            ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            ctx.stroke();
+        }
+
+        function handleTouch(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent(e.type === 'touchstart' ? 'mousedown' : 'mousemove', {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            canvas.dispatchEvent(mouseEvent);
+        }
+
+        function stopDrawing() {
+            isDrawing = false;
+        }
+
+        function clearSignature() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            hasSignature = false;
+        }
+
+        // Equipment Management
+        let equipmentCount = 0;
+
+        function addEquipment() {
+            equipmentCount++;
+            const container = document.getElementById('equipmentContainer');
+            const div = document.createElement('div');
+            div.className = 'equipment-item';
+            div.id = `equipment-${equipmentCount}`;
+            div.innerHTML = `
+                <div class="equipment-row">
+                    <div>
+                        <label>Equipment Type</label>
+                        <select class="equipment-type">
+                            <option value="">Select Equipment</option>
+                            <option value="Scissor Lift">Scissor Lift</option>
+                            <option value="Boom Lift">Boom Lift</option>
+                            <option value="Forklift">Forklift</option>
+                            <option value="Man Lift">Man Lift</option>
+                            <option value="Compressor">Compressor</option>
+                            <option value="Generator">Generator</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Hours</label>
+                        <input type="number" class="equipment-hours" min="0.5" step="0.5" placeholder="Hours">
+                    </div>
+                </div>
+                <button type="button" class="btn btn-remove" onclick="removeEquipment(${equipmentCount})">Remove</button>
+            `;
+            container.appendChild(div);
+        }
+
+        function removeEquipment(id) {
+            document.getElementById(`equipment-${id}`).remove();
+        }
+
+        // Materials Management
+        let materialCount = 0;
+
+        function addMaterial() {
+            materialCount++;
+            const container = document.getElementById('materialsContainer');
+            const div = document.createElement('div');
+            div.className = 'material-item';
+            div.id = `material-${materialCount}`;
+            div.innerHTML = `
+                <div class="material-row">
+                    <div>
+                        <label>Quantity</label>
+                        <input type="text" class="material-qty" placeholder="e.g., 2">
+                    </div>
+                    <div>
+                        <label>Description</label>
+                        <input type="text" class="material-desc" placeholder="e.g., 2x4 CDX">
+                    </div>
+                    <div>
+                        <label>Supplier</label>
+                        <select class="material-supplier">
+                            <option value="">Select Supplier</option>
+                            <option value="Pine Cone Lumber">Pine Cone Lumber</option>
+                            <option value="Whitecap">Whitecap</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-remove" onclick="removeMaterial(${materialCount})">Remove</button>
+            `;
+            container.appendChild(div);
+        }
+
+        function removeMaterial(id) {
+            document.getElementById(`material-${id}`).remove();
+        }
+
+        // Photo Preview
+        document.getElementById('photos').addEventListener('change', function(e) {
+            const preview = document.getElementById('photoPreview');
+            preview.innerHTML = '';
+            
+            Array.from(e.target.files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    preview.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+
+        // Form Submission
+        document.getElementById('tmForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            if (!hasSignature) {
+                alert('Please provide a signature before submitting.');
+                return;
+            }
+
+            // Show loading state
+            const submitBtn = document.querySelector('.btn-submit');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Submitting...';
+            submitBtn.disabled = true;
+
+            try {
+                // Collect form data
+                const formData = {
+                    date: document.getElementById('date').value,
+                    jobNumber: document.getElementById('jobNumber').value,
+                    generalContractor: document.getElementById('generalContractor').value,
+                    gcAddress: window.currentGCAddress || '',
+                    projectAddress: document.getElementById('projectAddress').value,
+                    numMen: document.getElementById('numMen').value,
+                    totalHours: document.getElementById('totalHours').value,
+                    workDescription: document.getElementById('workDescription').value,
+                    foremanName: document.getElementById('foremanName').value,
+                    signature: canvas.toDataURL(),
+                    equipment: [],
+                    materials: [],
+                    photos: []
+                };
+
+                // Collect equipment
+                document.querySelectorAll('.equipment-item').forEach(item => {
+                    const type = item.querySelector('.equipment-type').value;
+                    const hours = item.querySelector('.equipment-hours').value;
+                    if (type && hours) {
+                        formData.equipment.push({ type, hours });
+                    }
+                });
+
+                // Collect materials
+                document.querySelectorAll('.material-item').forEach(item => {
+                    const qty = item.querySelector('.material-qty').value;
+                    const desc = item.querySelector('.material-desc').value;
+                    const supplier = item.querySelector('.material-supplier').value;
+                    if (qty && desc) {
+                        formData.materials.push({ qty, desc, supplier });
+                    }
+                });
+
+                // Collect photos
+                const photoFiles = document.getElementById('photos').files;
+                for (let file of photoFiles) {
+                    const reader = new FileReader();
+                    await new Promise(resolve => {
+                        reader.onload = function(e) {
+                            formData.photos.push(e.target.result);
+                            resolve();
+                        };
+                        reader.readAsDataURL(file);
+                    });
+                }
+
+                // Send to backend
+                const BACKEND_URL = 'https://tm-report-backend.onrender.com';
+                
+                const response = await fetch(`${BACKEND_URL}/api/submit-tm-report`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Show success message
+                    document.getElementById('tmForm').style.display = 'none';
+                    document.getElementById('successMessage').style.display = 'block';
+                    document.getElementById('successMessage').innerHTML = `
+                        <h2>✓ Report Submitted Successfully!</h2>
+                        <p>Your T&M report has been sent to:</p>
+                        <p><strong>jordan.calbuilders@gmail.com</strong><br>
+                        <strong>kathie.calbuilders@gmail.com</strong></p>
+                        <p style="margin-top: 15px; font-size: 14px;">The office will add dollar amounts and finalize the report.</p>
+                    `;
+
+                    // Reset form after 5 seconds
+                    setTimeout(() => {
+                        location.reload();
+                    }, 5000);
+                } else {
+                    throw new Error(result.message || 'Submission failed');
+                }
+
+            } catch (error) {
+                console.error('Submission error:', error);
+                alert('Error submitting report: ' + error.message + '\n\nPlease try again or contact the office.');
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Add initial material and equipment fields
+        addMaterial();
+        addEquipment();
+    </script>
+</body>
+</html>
