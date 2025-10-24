@@ -176,21 +176,6 @@
             box-shadow: 0 5px 15px rgba(162, 115, 57, 0.3);
         }
 
-        .signature-pad {
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            cursor: crosshair;
-            display: block;
-            margin: 10px 0;
-            touch-action: none;
-        }
-
-        .signature-controls {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
         .photo-upload {
             margin-top: 10px;
         }
@@ -375,14 +360,6 @@
                 <input type="text" id="foremanName" required>
             </div>
 
-            <div class="form-group">
-                <label>Foreman Signature <span class="required">*</span></label>
-                <canvas id="signaturePad" class="signature-pad" width="600" height="150"></canvas>
-                <div class="signature-controls">
-                    <button type="button" class="btn btn-remove" onclick="clearSignature()">Clear Signature</button>
-                </div>
-            </div>
-
             <button type="submit" class="btn btn-submit">Submit T&M Report</button>
         </form>
 
@@ -502,57 +479,6 @@
         // Set today's date as default
         document.getElementById('date').valueAsDate = new Date();
 
-        // Signature Pad Setup
-        const canvas = document.getElementById('signaturePad');
-        const ctx = canvas.getContext('2d');
-        let isDrawing = false;
-        let hasSignature = false;
-
-        canvas.addEventListener('mousedown', startDrawing);
-        canvas.addEventListener('mousemove', draw);
-        canvas.addEventListener('mouseup', stopDrawing);
-        canvas.addEventListener('mouseout', stopDrawing);
-        canvas.addEventListener('touchstart', handleTouch);
-        canvas.addEventListener('touchmove', handleTouch);
-        canvas.addEventListener('touchend', stopDrawing);
-
-        function startDrawing(e) {
-            isDrawing = true;
-            hasSignature = true;
-            const rect = canvas.getBoundingClientRect();
-            ctx.beginPath();
-            ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
-        }
-
-        function draw(e) {
-            if (!isDrawing) return;
-            const rect = canvas.getBoundingClientRect();
-            ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
-            ctx.strokeStyle = '#000';
-            ctx.lineWidth = 2;
-            ctx.lineCap = 'round';
-            ctx.stroke();
-        }
-
-        function handleTouch(e) {
-            e.preventDefault();
-            const touch = e.touches[0];
-            const mouseEvent = new MouseEvent(e.type === 'touchstart' ? 'mousedown' : 'mousemove', {
-                clientX: touch.clientX,
-                clientY: touch.clientY
-            });
-            canvas.dispatchEvent(mouseEvent);
-        }
-
-        function stopDrawing() {
-            isDrawing = false;
-        }
-
-        function clearSignature() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            hasSignature = false;
-        }
-
         // Equipment Management
         let equipmentCount = 0;
 
@@ -648,11 +574,6 @@
         // Form Submission
         document.getElementById('tmForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-
-            if (!hasSignature) {
-                alert('Please provide a signature before submitting.');
-                return;
-            }
 
             // Show loading state
             const submitBtn = document.querySelector('.btn-submit');
